@@ -11,20 +11,20 @@ typedef struct _point {
   } point;
 
 int main(int argc, char **argv) {
-  if (argc < 4) {
-    printf("Usage: %s <tablet ip> <lat> <lon> <alt>\n", argv[0]);
+  if (argc < 5) {
+    printf("Usage: %s <tablet ip> <tablet port> <lat> <lon> <alt>\n", argv[0]);
     return 1;
   }
   int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
   struct sockaddr_in addr;
   addr.sin_family = AF_INET;
-  addr.sin_port = htons(4444);
+  addr.sin_port = htons(atoi(argv[2]));
   inet_pton(AF_INET, argv[1], &addr.sin_addr);
 
   point pt;
-  pt.lat = strtof(argv[2], NULL);
-  pt.lon = strtof(argv[3], NULL);
-  pt.alt = strtof(argv[4], NULL);
+  pt.lat = strtof(argv[3], NULL);
+  pt.lon = strtof(argv[4], NULL);
+  pt.alt = strtof(argv[5], NULL);
   sendto(sockfd, &pt, sizeof(point), 0, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
   printf("send packet with %f, %f, %f", pt.lat, pt.lon, pt.alt);
 
